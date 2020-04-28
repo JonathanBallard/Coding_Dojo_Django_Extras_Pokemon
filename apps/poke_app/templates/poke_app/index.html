@@ -35,7 +35,6 @@
     <div class="d-inline-block col-xl-8 align-top">
         <h1 class="display-3">All Pokemon</h1>
         <p id="allPokemon"></p>
-        <img src="/adsfklj/imsdf.jpg" class="pokemonImage" id="151">
         
 
     </div>
@@ -92,7 +91,7 @@
 
 
             $.ajax({
-                url:"https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20",
+                url:"https://pokeapi.co/api/v2/pokemon/?offset=20&limit=50",
                 method:"get",
                 success:function(response){
                     //iterate over dictionary rendering all pokemon up to max and showing image
