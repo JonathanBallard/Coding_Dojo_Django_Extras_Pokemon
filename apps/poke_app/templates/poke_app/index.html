@@ -28,14 +28,15 @@
 
 
 
-<div class="container">
+<div class="mt-5 container">
 
 
     {% comment %} all pokemon {% endcomment %}
     <div class="d-inline-block col-xl-8 align-top">
         <h1 class="display-3">All Pokemon</h1>
         <p id="allPokemon"></p>
-        <div id="bulbasaur"></div>
+        <img src="/adsfklj/imsdf.jpg" class="pokemonImage" id="151">
+        
 
     </div>
 
@@ -45,13 +46,11 @@
 
     {% comment %} single pokemon {% endcomment %}
     <div class="d-inline-block col-xl-3 border border-danger align-top">
-        <h1 class="display-3">Individual Pokemon</h1>
+        <h1 class="display-4">Chosen Pokemon</h1>
         <p id="singlePokemon"></p>
 
 
     </div>
-
-
 
 
 </div>
@@ -64,12 +63,11 @@
 
     <script>
         $(document).ready(function(){
-            pokemonID = 1
-            $('.pokemonImage').click(function(){
-                //find a way to pass pokemon ID through image click
-                pokemonID = 1
-            })
+            var pokemonID = 1;
+            var allPokemonString = "";
 
+            
+        /*
             //or pass url of clicked image to url here
             $.ajax({
                 //url:"http://pokeapi.co/api/v2/pokemon/1",
@@ -78,7 +76,7 @@
                 success:function(response){
                     //build template to handle JSON here
                     var html_str = "";
-                    html_str += "<a class='display-3' href=" + response.forms[0].url + " >" + response.name + "</a>";
+                    html_str += "<a class='display-4' href=" + response.forms[0].url + " >" + response.name + "</a>";
                     
                     html_str += "<h4>Types</h4>";
                     html_str += "<ul>";
@@ -90,7 +88,90 @@
                 }
             },
             "json");
-        })
+        */
+
+
+            $.ajax({
+                url:"https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20",
+                method:"get",
+                success:function(response){
+                    //iterate over dictionary rendering all pokemon up to max and showing image
+                    
+                    for(var i = 0; i < response.results.length; i++){
+                        $.ajax({
+                            url: response.results[i].url,
+                            method:"get",
+                            success:function(res){
+                                //build template to handle JSON here
+                                allPokemonString += "<img id='" + res.id + "' class='pokemonImage' src=' " + res.sprites.front_default + " ' alt='pokemon'>"
+                                //$("#singlePokemon").html(html_str);
+                                $("#allPokemon").html(allPokemonString);
+                            }
+                            
+                        },
+                        "json");
+                    }
+                }
+            },
+            "json");
+
+
+
+
+
+                $(document).on('click', '.pokemonImage', function(){
+                    
+                
+
+
+
+                //find a way to pass pokemon ID through image click
+                pokemonID = $(this).attr('id');
+                console.log(this);
+                console.log('testest');
+                $.ajax({
+                    url:"http://pokeapi.co/api/v2/pokemon/" + pokemonID,
+                    method:"get",
+                    success:function(response){
+                        console.log(pokemonID);
+                        console.log(response.forms)
+                        //build template to handle JSON here
+                        var html_str = "";
+                        html_str += "<a class='display-4' href=" + response.forms[0].url + " >" + response.name + "</a>";
+                        
+                        html_str += "<h4>Types</h4>";
+                        html_str += "<ul>";
+                        for(var i = 0; i < response.types.length; i++) {
+                            html_str += "<li>" + response.types[i].type.name + "</li>";
+                        }
+                        html_str += "</ul>";
+
+                        html_str += "<h5> Height:";
+                        html_str += response.height;
+                        html_str += "</h5>";
+
+                        html_str += "<h5> Weight:";
+                        html_str += response.weight;
+                        html_str += "</h5>";
+
+                        $("#singlePokemon").html(html_str);
+                    }
+            },
+            "json");
+            })
+
+
+        });
+
+
+
+
+
+
+
+
+
+
     </script>
 
 
